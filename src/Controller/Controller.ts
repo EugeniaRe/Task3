@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../Schemas/User';
+import Order from '../Schemas/Order';
 class Controller {
   async createUser(req: express.Request, res: express.Response) {
     try {
@@ -39,13 +40,15 @@ class Controller {
 
   async createOrder(req: express.Request, res: express.Response) {
     try {
-      const { email } = req.body;
-      const user = await User.create({
-        email,
-        order_ids: [],
+      const { user_id, status, option, price } = req.body;
+      const order = await Order.create({
+        user_id,
+        status,
+        option,
+        price,
         created_at: Date.now(),
       });
-      res.json(user);
+      res.json(order);
     } catch (e) {
       res.status(500).json(e);
     }
@@ -57,8 +60,8 @@ class Controller {
       if (!id) {
         res.status(400).json({ message: 'ID is not defined' });
       }
-      const user = await User.findById(id);
-      return res.json(user);
+      const order = await Order.findById(id);
+      return res.json(order);
     } catch (e) {
       res.status(500).json(e);
     }
@@ -66,8 +69,8 @@ class Controller {
 
   async getAllOrders(req: express.Request, res: express.Response) {
     try {
-      const users = await User.find();
-      return res.json(users);
+      const order = await Order.find();
+      return res.json(order);
     } catch (e) {
       res.status(500).json(e);
     }
