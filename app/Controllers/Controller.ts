@@ -1,10 +1,12 @@
 import express from 'express';
-import User from '../Schemas/User';
-import Order from '../Schemas/Order';
+import User from '../Models/User';
+import Order from '../Models/Order';
 class Controller {
   async createUser(req: express.Request, res: express.Response) {
     try {
       const { email } = req.body;
+      if (!email) {
+      }
       const user = await User.create({
         email,
         order_ids: [],
