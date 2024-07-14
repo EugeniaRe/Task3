@@ -1,9 +1,16 @@
 import { Request, Response } from 'express';
 import { STATUS_CODES } from 'http';
-import User from '../Models/User';
-import usersService from 'Services/usersService';
+import usersService from '../Services/usersService';
 import mongoose from 'mongoose';
 class UsersController {
+  async getAllUsers(req: Request, res: Response) {
+    try {
+      const users = await usersService.getAll();
+      return res.json({ users });
+    } catch (err) {
+      res.status(500).json({ message: err.message ?? STATUS_CODES[500] });
+    }
+  }
   async createUser(req: Request, res: Response) {
     try {
       const { email } = req.body;
@@ -20,9 +27,9 @@ class UsersController {
         });
       }
 
-      const user = usersService.create(email);
+      const user = await usersService.create(email);
 
-      res.status(201).json(user);
+      return res.status(201).json(user);
     } catch (err) {
       res.status(500).json({ message: err.message ?? STATUS_CODES[500] });
     }
@@ -50,15 +57,6 @@ class UsersController {
           .json({ message: `${STATUS_CODES[404]}: User not found` });
       }
       return res.json(user);
-    } catch (err) {
-      res.status(500).json({ message: err.message ?? STATUS_CODES[500] });
-    }
-  }
-
-  async getAllUsers(req: Request, res: Response) {
-    try {
-      const users = await usersService.getAll();
-      return res.json({ users });
     } catch (err) {
       res.status(500).json({ message: err.message ?? STATUS_CODES[500] });
     }

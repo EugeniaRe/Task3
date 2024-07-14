@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 
 const Order = new mongoose.Schema({
   user_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   status: {
     type: String,
@@ -13,9 +13,11 @@ const Order = new mongoose.Schema({
   },
   price: {
     type: String,
+    required: true,
   },
   created_at: {
     type: Date,
+    default: Date.now,
   },
 });
 
